@@ -1,0 +1,21 @@
+---
+- name: Get Vector distrib
+  ansible.builtin.get_url:
+    url: "https://yum.vector.dev/stable/vector-0/x86_64/vector-{{ vector_version }}.x86_64.rpm"
+    dest: "./{{ item }}-{{ vector_version }}.rpm"
+  with_items: "{{ vector_packages }}"
+- name: Install Vector packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - vector-{{ vector_version }}.rpm
+  notify: Start Vector service
+- name: Update template file
+  become: true
+  ansible.builtin.template:
+    src: "./templates/vector.yaml.j2"
+    dest: "/etc/vector/vector.yaml"
+    owner: root
+    group: root
+    mode: 0644
+  notify: Start vector service
