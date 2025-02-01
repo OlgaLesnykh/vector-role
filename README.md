@@ -23,7 +23,7 @@ Example Playbook
 - name: Install Vector
   hosts: servers
   roles:
-    - role: vector-role
+    - vector
 ```
 
 
